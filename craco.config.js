@@ -1,7 +1,7 @@
 /*
  * @Author: 吴晓晴
  * @Date: 2021-05-19 22:21:05
- * @LastEditTime: 2021-05-19 23:27:19
+ * @LastEditTime: 2021-05-23 14:35:20
  * @FilePath: \webDevelopment\blogDev\jspang-blog\react-blog\wxq-blog\craco.config.js
  */
 // const path = require("path");
@@ -39,7 +39,9 @@ module.exports = {
       options: {
         lessLoaderOptions: {
           lessOptions: {
-            modifyVars: { '@primary-color': '#1DA57A' },
+            modifyVars: {
+              '@primary-color': '#1DA57A'
+            },
             javascriptEnabled: true,
           },
         },
@@ -58,8 +60,21 @@ module.exports = {
       '@components': resolve('src/components'),
       '@assets': resolve('src/assets'),
       '@pages': resolve('src/pages'),
+      '@services': resolve('src/services'),
 
     }
-  }
+  },
+  devServer: {
+    port: 9000,
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:7001',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    }
+  },
 
 };

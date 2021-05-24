@@ -10,9 +10,9 @@ import Header from "@components/Header"
 import Author from "@components/Author"
 import Advert from "@components/Advert"
 import Footer from "@components/Footer"
-// import ReactMarkdown from "react-markdown"
-// import MarkNav from "markdown-navbar"
-// import "markdown-navbar/dist/navbar.css"
+import ReactMarkdown from "react-markdown"
+import MarkNav from "markdown-navbar"
+import "markdown-navbar/dist/navbar.css"
 import api from "@services"
 
 import marked from "marked"
@@ -28,6 +28,8 @@ import Tocify from '@components/tocify'
 
 
 const Detailed = (props) => {
+
+    
     // const [detailedInfo, setDetailedInfo] = useState({})
     const [detailedInfo, setDetailedInfo] = useState({});
     const [html, setHtml] = useState('')
@@ -68,7 +70,8 @@ const Detailed = (props) => {
         api.detailed.getDetailedInfo({ id: detailedParams.id }).then(res => {
             console.log(res)
             setDetailedInfo(res.data[0])
-            setHtml(marked(res.data[0].article_content))
+            // setHtml(marked(res.data[0].article_content))
+            setHtml(res.data[0].article_content)
         })
     }, [html])
     return (
@@ -111,14 +114,14 @@ const Detailed = (props) => {
 
                             </div>
                             <div className="detailed-content"
-                                dangerouslySetInnerHTML={{ __html: html }}
+                                // dangerouslySetInnerHTML={{ __html: html }}
 
 
                             >
-                                {/* <ReactMarkdown
+                                <ReactMarkdown
                                     children={html}
                                     escapeHtml={false}
-                                /> */}
+                                />
 
 
 

@@ -1,7 +1,7 @@
 /*
  * @Author: 吴晓晴
  * @Date: 2021-05-22 20:25:28
- * @LastEditTime: 2021-05-23 16:14:42
+ * @LastEditTime: 2021-05-24 23:25:45
  * @FilePath: \webDevelopment\blogDev\jspang-blog\react-blog\wxq-blog\src\pages\Home\index.jsx
  */
 /*
@@ -21,6 +21,10 @@ import Footer from "@components/Footer"
 import { SettingOutlined, FieldTimeOutlined } from '@ant-design/icons';
 import api from "@services"
 
+import marked from "marked"
+import hljs from "highlight.js"
+import "highlight.js/styles/monokai-sublime.css"
+
 
 
 
@@ -30,6 +34,20 @@ const Home = () => {
 
     let history = useHistory();
     const [mylist, setMylist] = useState([])
+
+    const renderer = new marked.Renderer()
+    marked.setOptions({
+        renderer: renderer,
+        gfm: true,
+        pedantic: false,
+        sanitize: false,
+        tables: true,
+        breaks: false,
+        smartLists: true,
+        highlight: function (code) {
+            return hljs.highlightAuto(code).value
+        }
+    })
     useEffect(() => {
         api.home.getArticleList().then(res => {
             console.log(res)
@@ -84,7 +102,7 @@ const Home = () => {
                                         {item.view_count}
                                     </span>
                                 </div>
-                                <div className="list-context">{item.introduce}</div>
+                                <div className="list-context" dangerouslySetInnerHTML={{__html:marked(item.introduce)}}></div>
                             </List.Item>
                         )}
                     />

@@ -1,4 +1,5 @@
 import React, { memo, useState, useEffect } from 'react';
+import { useHistory, Link } from 'react-router-dom';
 import "./style.less"
 import { Row, Col, List, Breadcrumb } from "antd"
 import Header from "@components/Header"
@@ -10,6 +11,7 @@ import api from "@services"
 
 
 const MyList = (props) => {
+    let history = useHistory();
 
     const [mylist, setMylist] = useState([])
     useEffect(() => {
@@ -26,19 +28,26 @@ const MyList = (props) => {
             id: mylistParams.id
         }).then(res => {
             console.log(res)
-            setMylist([...mylist,...res.data])
+            setMylist(res.data)
 
         })
 
 
-    }, [])
+    }, [props])
+
+    const linkDetailed = (id) => {
+        history.push({
+            pathname: '/detailed',
+            search: `?id=${id}`,
+            hash: '',
+            state: { detailedParams: { id: id } }
+        })
+
+    }
 
 
     return (
         <div className="home">
-            <header>
-                Home
-            </header>
             <Header></Header>
             <Row className="comm-main" type="flex" justify="center" >
                 <Col className="comm-left" xs={24} sm={24} md={16} lg={18} xl={14} >
@@ -58,7 +67,7 @@ const MyList = (props) => {
                         itemLayout="vertical"
                         dataSource={mylist}
                         renderItem={item => (
-                            <List.Item>
+                            <List.Item onClick={e=>linkDetailed(item.id)}>
                                 <div className="list-title">{item.title}</div>
                                 <div className="list-icon">
                                     <span>

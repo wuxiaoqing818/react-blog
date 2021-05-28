@@ -1,7 +1,7 @@
 /*
  * @Author: 吴晓晴
  * @Date: 2021-05-22 20:25:28
- * @LastEditTime: 2021-05-24 23:25:45
+ * @LastEditTime: 2021-05-28 22:57:45
  * @FilePath: \webDevelopment\blogDev\jspang-blog\react-blog\wxq-blog\src\pages\Home\index.jsx
  */
 /*
@@ -57,16 +57,18 @@ const Home = () => {
 
     // console.log(new Date().getTime())
     const linkDetailed = (id) => {
-        history.push({ pathname: '/detailed', state: { id } })
+        history.push({
+            pathname: '/detailed',
+            search: `?id=${id}`,
+            hash: '',
+            state: { detailedParams: { id: id } }
+        })
 
     }
 
 
     return (
         <div className="home">
-            <header>
-                Home
-            </header>
             <Header></Header>
             <Row className="comm-main" type="flex" justify="center" >
                 <Col className="comm-left" xs={24} sm={24} md={16} lg={18} xl={14} >
@@ -82,7 +84,7 @@ const Home = () => {
                                         pathname: '/detailed',
                                         search: `?id=${item.id}`,
                                         hash: '',
-                                        state: { detailedParams:{id:item.id} }
+                                        state: { detailedParams: { id: item.id } }
                                     }} style={{ cursor: 'pointer' }}>
                                         {item.title}
                                     </Link>
@@ -102,7 +104,7 @@ const Home = () => {
                                         {item.view_count}
                                     </span>
                                 </div>
-                                <div className="list-context" dangerouslySetInnerHTML={{__html:marked(item.introduce)}}></div>
+                                <div className="list-context" dangerouslySetInnerHTML={{ __html: marked(item.introduce) }}></div>
                             </List.Item>
                         )}
                     />

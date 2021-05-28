@@ -33,6 +33,7 @@ const Detailed = (props) => {
     // const [detailedInfo, setDetailedInfo] = useState({})
     const [detailedInfo, setDetailedInfo] = useState({});
     const [html, setHtml] = useState('')
+    const [markedDownStr, setMarkDownStr] = useState('')
 
 
     const tocify = new Tocify()
@@ -72,13 +73,11 @@ const Detailed = (props) => {
             setDetailedInfo(res.data[0])
             // setHtml(marked(res.data[0].article_content))
             setHtml(res.data[0].article_content)
+            setMarkDownStr(res.data[0].article_content)
         })
     }, [html])
     return (
         <div className="detailed">
-            <header>
-                Home
-            </header>
             <Header></Header>
             <Row className="comm-main" type="flex" justify="center" >
                 <Col className="comm-left" xs={24} sm={24} md={16} lg={18} xl={14} >
@@ -137,7 +136,7 @@ const Detailed = (props) => {
                             <div className="nav-title">文章目录</div>
                             {/* <MarkNav
                                 className="article-menu"
-                                source={html}
+                                source={markedDownStr}
                                 ordered={true}
                             /> */}
 

@@ -1,7 +1,7 @@
 /*
  * @Author: 吴晓晴
  * @Date: 2021-05-22 20:25:28
- * @LastEditTime: 2021-05-28 22:57:45
+ * @LastEditTime: 2021-05-31 22:39:01
  * @FilePath: \webDevelopment\blogDev\jspang-blog\react-blog\wxq-blog\src\pages\Home\index.jsx
  */
 /*
@@ -13,7 +13,7 @@
 import React, { memo, useState, useEffect } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import "./style.less"
-import { Row, Col, List } from "antd"
+import { Row, Col, List,Tooltip } from "antd"
 import Header from "@components/Header"
 import Author from "@components/Author"
 import Advert from "@components/Advert"
@@ -112,6 +112,25 @@ const Home = () => {
                 <Col className="comm-right" xs={0} sm={0} md={7} lg={5} xl={4} >
                     <Author></Author>
                     <Advert></Advert>
+                    <div className="detailed-nav">
+                        <div className="nav-title">文章列表</div>
+
+                        <ul>
+                            {
+                                mylist.map((item, index) => {
+
+                                    return (
+                                        <Tooltip placement="left" title={item.title} key={index}>
+                                            <li onClick={e => linkDetailed(item.id)}>{index + 1}.{item.title}</li>
+                                        </Tooltip>
+                                    )
+                                })
+                            }
+                        </ul>
+
+
+
+                    </div>
                 </Col>
             </Row>
 

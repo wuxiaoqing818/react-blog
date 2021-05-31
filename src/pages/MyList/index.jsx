@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import "./style.less"
-import { Row, Col, List, Breadcrumb } from "antd"
+import { Row, Col, List, Breadcrumb, Tooltip } from "antd"
 import Header from "@components/Header"
 import Author from "@components/Author"
 import Advert from "@components/Advert"
@@ -58,7 +58,7 @@ const MyList = (props) => {
                                 <a href="/">首页</a>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                视频教程
+                                {mylist[0]?.typeName||'该类型无数据'}
                             </Breadcrumb.Item>
                         </Breadcrumb>
                     </div>
@@ -67,7 +67,7 @@ const MyList = (props) => {
                         itemLayout="vertical"
                         dataSource={mylist}
                         renderItem={item => (
-                            <List.Item onClick={e=>linkDetailed(item.id)}>
+                            <List.Item onClick={e => linkDetailed(item.id)}>
                                 <div className="list-title">{item.title}</div>
                                 <div className="list-icon">
                                     <span>
@@ -91,6 +91,25 @@ const MyList = (props) => {
                 <Col className="comm-right" xs={0} sm={0} md={7} lg={5} xl={4} >
                     <Author></Author>
                     <Advert></Advert>
+                    <div className="detailed-nav">
+                        <div className="nav-title">文章列表</div>
+
+                        <ul>
+                            {
+                                mylist.map((item, index) => {
+
+                                    return (
+                                        <Tooltip placement="left" title={item.title} key={index}>
+                                            <li onClick={e => linkDetailed(item.id)}>{index + 1}.{item.title}</li>
+                                        </Tooltip>
+                                    )
+                                })
+                            }
+                        </ul>
+
+
+
+                    </div>
                 </Col>
             </Row>
 

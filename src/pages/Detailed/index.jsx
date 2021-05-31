@@ -1,18 +1,19 @@
 
 import React, { memo, useState, useEffect, useRef } from 'react';
+import { useHistory, Link } from 'react-router-dom';
 import "./style.less"
 import {
     useParams
 } from "react-router-dom";
-import { Row, Col, Breadcrumb, Affix } from "antd"
+import { Row, Col, Breadcrumb, Affix, Tooltip } from "antd"
 import { SettingOutlined, FieldTimeOutlined } from '@ant-design/icons';
 import Header from "@components/Header"
 import Author from "@components/Author"
 import Advert from "@components/Advert"
 import Footer from "@components/Footer"
-import ReactMarkdown from "react-markdown"
-import MarkNav from "markdown-navbar"
-import "markdown-navbar/dist/navbar.css"
+// import ReactMarkdown from "react-markdown"
+// import MarkNav from "markdown-navbar"
+// import "markdown-navbar/dist/navbar.css"
 import api from "@services"
 
 import marked from "marked"
@@ -29,55 +30,54 @@ import Tocify from '@components/tocify.tsx'
 
 const Detailed = (props) => {
 
-    let markdown = '# P01:课程介绍和环境搭建\n' +
-        '[ **M** ] arkdown + E [ **ditor** ] = **Mditor**  \n' +
-        '> Mditor 是一个简洁、易于集成、方便扩展、期望舒服的编写 markdown 的编辑器，仅此而已... \n\n' +
-        '**这是加粗的文字**\n\n' +
-        '*这是倾斜的文字*`\n\n' +
-        '***这是斜体加粗的文字***\n\n' +
-        '~~这是加删除线的文字~~ \n\n' +
-        '\`console.log(111)\` \n\n' +
+    // let markdown = '# P01:课程介绍和环境搭建\n' +
+    //     '[ **M** ] arkdown + E [ **ditor** ] = **Mditor**  \n' +
+    //     '> Mditor 是一个简洁、易于集成、方便扩展、期望舒服的编写 markdown 的编辑器，仅此而已... \n\n' +
+    //     '**这是加粗的文字**\n\n' +
+    //     '*这是倾斜的文字*`\n\n' +
+    //     '***这是斜体加粗的文字***\n\n' +
+    //     '~~这是加删除线的文字~~ \n\n' +
+    //     '\`console.log(111)\` \n\n' +
 
-        '# p02:来个Hello World 初始Vue3.0\n' +
-        '> aaaaaaaaa\n' +
-        '>> bbbbbbbbb\n' +
-        '>>> cccccccccc\n' +
-        '***\n\n\n' +
-        '# p03:Vue3.0基础知识讲解\n' +
-        '> aaaaaaaaa\n' +
-        '>> bbbbbbbbb\n' +
-        '>>> cccccccccc\n\n' +
-        '# p04:Vue3.0基础知识讲解\n' +
-        '> aaaaaaaaa\n' +
-        '>> bbbbbbbbb\n' +
-        '>>> cccccccccc\n\n' +
-        '#5 p05:Vue3.0基础知识讲解\n' +
-        '> aaaaaaaaa\n' +
-        '>> bbbbbbbbb\n' +
-        '>>> cccccccccc\n\n' +
-        '# p06:Vue3.0基础知识讲解\n' +
-        '> aaaaaaaaa\n' +
-        '>> bbbbbbbbb\n' +
-        '>>> cccccccccc\n\n' +
-        '# p07:Vue3.0基础知识讲解\n' +
-        '> aaaaaaaaa\n' +
-        '>> bbbbbbbbb\n' +
-        '>>> cccccccccc\n\n' +
-        '``` var a=11; ```'
+    //     '# p02:来个Hello World 初始Vue3.0\n' +
+    //     '> aaaaaaaaa\n' +
+    //     '>> bbbbbbbbb\n' +
+    //     '>>> cccccccccc\n' +
+    //     '***\n\n\n' +
+    //     '# p03:Vue3.0基础知识讲解\n' +
+    //     '> aaaaaaaaa\n' +
+    //     '>> bbbbbbbbb\n' +
+    //     '>>> cccccccccc\n\n' +
+    //     '# p04:Vue3.0基础知识讲解\n' +
+    //     '> aaaaaaaaa\n' +
+    //     '>> bbbbbbbbb\n' +
+    //     '>>> cccccccccc\n\n' +
+    //     '#5 p05:Vue3.0基础知识讲解\n' +
+    //     '> aaaaaaaaa\n' +
+    //     '>> bbbbbbbbb\n' +
+    //     '>>> cccccccccc\n\n' +
+    //     '# p06:Vue3.0基础知识讲解\n' +
+    //     '> aaaaaaaaa\n' +
+    //     '>> bbbbbbbbb\n' +
+    //     '>>> cccccccccc\n\n' +
+    //     '# p07:Vue3.0基础知识讲解\n' +
+    //     '> aaaaaaaaa\n' +
+    //     '>> bbbbbbbbb\n' +
+    //     '>>> cccccccccc\n\n' +
+    //     '``` var a=11; ```'
 
-
-    // const [detailedInfo, setDetailedInfo] = useState({})
-    const [detailedInfo, setDetailedInfo] = useState({});
+    let history = useHistory()
+    const [detailedInfo, setDetailedInfo] = useState({ title: '' })
     const [html, setHtml] = useState('')
-    const [markedDownStr, setMarkDownStr] = useState(markdown)
+    const [mylist, setMylist] = useState([])
 
     const tocify = new Tocify()
     const renderer = new marked.Renderer();
-      renderer.heading = function(text, level, raw) {
+    renderer.heading = function (text, level, raw) {
         const anchor = tocify.add(text, level);
         return `<a id="${anchor}" href="#${anchor}" class="anchor-fix"><h${level}>${text}</h${level}></a>\n`;
-      };
-  
+    };
+
     marked.setOptions({
         renderer: renderer,
         gfm: true,
@@ -94,32 +94,67 @@ const Detailed = (props) => {
 
 
 
+    useEffect(async () => {
+        console.log(props)
+        const { location } = props;
+        let detailedParams;
+        if (location.state && location.state.detailedParams) {//判断当前有参数
+            detailedParams = location.state.detailedParams;
+            sessionStorage.setItem('detailedParams', JSON.stringify(detailedParams));// 存入到sessionStorage中
+        } else {
+            detailedParams = JSON.parse(sessionStorage.getItem('detailedParams'));// 当state没有参数时，取sessionStorage中的参数
+        }
+        console.log(detailedParams.id)
+        const data = await getDetailedInfo(detailedParams.id)
+        const list = await getListById(data.typeId)
+        const otherList = list.filter(item => item.id != data.id)
+        // console.log(otherList)
+        // console.log(data)
+        setDetailedInfo(data)
+        setHtml(data.article_content)
+        setMylist(otherList)
+    }, [html, props])
+
+    //获取文章详情
+    const getDetailedInfo = (id) => {
+        return new Promise(resolve => {
+            api.detailed.getDetailedInfo({ id }).then(res => {
+                resolve(res.data[0])
+            })
+
+        })
+
+    }
+
+    //获取当前类型的文章列表  
+    const getListById = (id) => {
+        return new Promise(resolve => {
+            api.mylist.getListById({
+                id
+            }).then(res => {
+                resolve(res.data)
+
+            })
+        })
+    }
+
+    const linkDetailed = (id) => {
+        history.push({
+            pathname: '/detailed',
+            search: `?id=${id}`,
+            hash: '',
+            state: { detailedParams: { id: id } }
+        })
+
+    }
+
+
+
     // useEffect(() => {
-    //     console.log(props)
-    //     const { location } = props;
-    //     let detailedParams;
-    //     if (location.state && location.state.detailedParams) {//判断当前有参数
-    //         detailedParams = location.state.detailedParams;
-    //         sessionStorage.setItem('detailedParams', JSON.stringify(detailedParams));// 存入到sessionStorage中
-    //     } else {
-    //         detailedParams = JSON.parse(sessionStorage.getItem('detailedParams'));// 当state没有参数时，取sessionStorage中的参数
-    //     }
-    //     console.log(detailedParams.id)
-    //     api.detailed.getDetailedInfo({ id: detailedParams.id }).then(res => {
-    //         console.log(res)
-    //         setDetailedInfo(res.data[0])
-    //         // setHtml(marked(res.data[0].article_content))
-    //         setHtml(res.data[0].article_content)
-    //         setMarkDownStr(markdown)
-    //     })
-    // }, [html])
+    //     setHtml(markdown)
+    //     setMarkDownStr(markdown)
 
-
-    useEffect(() => {
-        setHtml(markdown)
-        setMarkDownStr(markdown)
-
-    }, [html, markedDownStr])
+    // }, [html, markedDownStr])
     return (
         <div className="detailed">
             <Header></Header>
@@ -132,11 +167,11 @@ const Detailed = (props) => {
                                     <a href="/">首页</a>
                                 </Breadcrumb.Item>
                                 <Breadcrumb.Item>
-                                    视频列表
-                            </Breadcrumb.Item>
+                                    {detailedInfo.typeName}
+                                </Breadcrumb.Item>
                                 <Breadcrumb.Item>
-                                    xxx
-                            </Breadcrumb.Item>
+                                    {detailedInfo.title.slice(0, 10) + '...'}
+                                </Breadcrumb.Item>
                             </Breadcrumb>
                         </div>
 
@@ -146,18 +181,18 @@ const Detailed = (props) => {
                             </div>
                             <div className="list-icon center">
                                 <span>
-                                    <SettingOutlined />2021-06-28
+                                    <SettingOutlined />{detailedInfo.addTime}
                                 </span>
                                 <span>
-                                    <SettingOutlined />视频教程
+                                    <SettingOutlined />{detailedInfo.typeName}
                                 </span>
                                 <span>
-                                    <SettingOutlined />5498人
+                                    <SettingOutlined />{detailedInfo.view_count}
                                 </span>
 
                             </div>
                             <div className="detailed-content"
-                            dangerouslySetInnerHTML={{__html:marked(html)}}
+                                dangerouslySetInnerHTML={{ __html: marked(html) }}
 
 
                             >
@@ -177,13 +212,28 @@ const Detailed = (props) => {
                     <Advert></Advert>
                     <Affix offsetTop={5}>
                         <div className="detailed-nav comm-box">
-                            <div className="nav-title">文章目录</div>
-                            <MarkNav
+                            <div className="nav-title">同类型文章</div>
+
+                            <ul>
+                                {
+                                    mylist.map((item, index) => {
+
+                                        return (
+                                            <Tooltip placement="left" title={item.title} key={index}>
+                                                <li onClick={e => linkDetailed(item.id)}>{index+1}.{item.title}</li>
+                                            </Tooltip>
+                                        )
+                                    })
+                                }
+                            </ul>
+
+
+                            {/* <MarkNav
                                 className="article-menu"
                                 source={markedDownStr}
                                 ordered={false}
                                 
-                            />
+                            /> */}
 
                             {/* <div className="toc-list" style={{height:'100px'}}>
                                 {tocify && tocify.render()}

@@ -1,7 +1,7 @@
 /*
  * @Author: 吴晓晴
  * @Date: 2021-05-22 20:25:28
- * @LastEditTime: 2021-05-31 22:39:01
+ * @LastEditTime: 2021-06-01 21:05:25
  * @FilePath: \webDevelopment\blogDev\jspang-blog\react-blog\wxq-blog\src\pages\Home\index.jsx
  */
 /*
@@ -135,6 +135,18 @@ const Home = () => {
             </Row>
 
             <Footer></Footer>
+
+            {/* 袁瑞普是傻逼 */}
+{/* 
+            <div className="parent">
+                <div className="child"></div>
+                <div className="child"></div>
+                <div className="child"></div>
+                <div className="child"></div>
+                <div className="child"></div>
+                <div className="child"></div>
+                <div className="child"></div>
+            </div> */}
         </div>
 
 

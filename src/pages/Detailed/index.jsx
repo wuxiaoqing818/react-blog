@@ -219,9 +219,19 @@ const Detailed = (props) => {
                                     mylist.map((item, index) => {
 
                                         return (
-                                            <Tooltip placement="left" title={item.title} key={index}>
-                                                <li onClick={e => linkDetailed(item.id)}>{index+1}.{item.title}</li>
-                                            </Tooltip>
+                                            
+                                               
+                                                <li onClick={e => linkDetailed(item.id)} key={index}>
+                                                    <span className="serial-number">{index+1}</span>
+
+
+                                                    <Tooltip placement="left" title={item.title}>
+
+                                                        <span className="article-title">{item.title}</span>
+
+                                                    </Tooltip>
+                                                </li>
+                                        
                                         )
                                     })
                                 }

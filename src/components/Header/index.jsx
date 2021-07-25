@@ -39,7 +39,7 @@ const Header = () => {
         <div className="header">
             <Row type="flex" justify="center" align="middle">
                 <Col xs={24} sm={24} md={10} lg={10} xl={10}>
-                    <span className="header-logo">吴晓晴</span>
+                    <span className="header-logo">小阿晴i</span>
                     <span className="header-txt">专注前端开发，喜欢和小姐姐一起学习。</span>
                 </Col>
                 <Col xs={24} sm={24} md={10} lg={10} xl={10}>

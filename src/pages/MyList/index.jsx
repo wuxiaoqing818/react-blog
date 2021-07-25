@@ -58,7 +58,7 @@ const MyList = (props) => {
                                 <a href="/">首页</a>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                {mylist[0]?.typeName||'该类型无数据'}
+                                {mylist[0]?.typeName || '该类型无数据'}
                             </Breadcrumb.Item>
                         </Breadcrumb>
                     </div>
@@ -99,9 +99,16 @@ const MyList = (props) => {
                                 mylist.map((item, index) => {
 
                                     return (
-                                        <Tooltip placement="left" title={item.title} key={index}>
-                                            <li onClick={e => linkDetailed(item.id)}>{index + 1}.{item.title}</li>
-                                        </Tooltip>
+                                        <li onClick={e => linkDetailed(item.id)} key={index}>
+                                            <span className="serial-number">{index + 1}</span>
+
+
+                                            <Tooltip placement="left" title={item.title}>
+
+                                                <span className="article-title">{item.title}</span>
+
+                                            </Tooltip>
+                                        </li>
                                     )
                                 })
                             }

@@ -1,7 +1,7 @@
 /*
  * @Author: 吴晓晴
  * @Date: 2021-05-22 20:25:28
- * @LastEditTime: 2021-06-01 21:05:25
+ * @LastEditTime: 2021-07-25 18:06:55
  * @FilePath: \webDevelopment\blogDev\jspang-blog\react-blog\wxq-blog\src\pages\Home\index.jsx
  */
 /*
@@ -18,7 +18,7 @@ import Header from "@components/Header"
 import Author from "@components/Author"
 import Advert from "@components/Advert"
 import Footer from "@components/Footer"
-import { SettingOutlined, FieldTimeOutlined } from '@ant-design/icons';
+import { FieldTimeOutlined, TrophyOutlined,CodeOutlined } from '@ant-design/icons';
 import api from "@services"
 
 import marked from "marked"
@@ -92,15 +92,15 @@ const Home = () => {
                                 </div>
                                 <div className="list-icon">
                                     <span>
-                                        <SettingOutlined />
+                                        < FieldTimeOutlined/>
                                         {item.addTime}
                                     </span>
                                     <span>
-                                        <FieldTimeOutlined />
+                                        <TrophyOutlined />
                                         {item.typeName}
                                     </span>
                                     <span>
-                                        <SettingOutlined />
+                                        <CodeOutlined />
                                         {item.view_count}
                                     </span>
                                 </div>
@@ -120,9 +120,17 @@ const Home = () => {
                                 mylist.map((item, index) => {
 
                                     return (
-                                        <Tooltip placement="left" title={item.title} key={index}>
-                                            <li onClick={e => linkDetailed(item.id)}>{index + 1}.{item.title}</li>
+                                      
+                                        <li onClick={e => linkDetailed(item.id)} key={index}>
+                                        <span className="serial-number">{index+1}</span>
+
+
+                                        <Tooltip placement="left" title={item.title}>
+
+                                            <span className="article-title">{item.title}</span>
+
                                         </Tooltip>
+                                    </li>
                                     )
                                 })
                             }
